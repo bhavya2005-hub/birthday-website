@@ -4,7 +4,6 @@
 
 const TOTAL_PHOTOS = 21;
 
-// Pages
 const page1 = document.getElementById('page1');
 const page2 = document.getElementById('page2');
 const page3 = document.getElementById('page3');
@@ -15,12 +14,10 @@ const gift3 = document.getElementById('gift3');
 
 const videoPage = document.getElementById('videoPage');
 
-// Media
 const page2Audio = document.getElementById('page2Audio');
 const songAudio = document.getElementById('songAudio');
 const mainVideo = document.getElementById('mainVideo');
 
-// All pages
 const allPages = [
   page1,
   page2,
@@ -33,52 +30,58 @@ const allPages = [
 
 
 // =========================================================
+// IMPORTANT: STOP ALL MEDIA ON INITIAL LOAD
+// =========================================================
+
+if (songAudio) {
+  songAudio.pause();
+  songAudio.currentTime = 150;
+}
+
+if (mainVideo) {
+  mainVideo.pause();
+  mainVideo.currentTime = 0;
+}
+
+if (page2Audio) {
+  page2Audio.pause();
+  page2Audio.currentTime = 0;
+}
+
+
+// =========================================================
 // PAGE SWITCHING
 // =========================================================
 
 function showPage(page) {
 
-  // -------------------------------------------------------
-  // Stop Gift 1 song whenever we leave Gift 1
-  // -------------------------------------------------------
-
-  if (page !== gift1) {
+  // Stop Gift 1 song unless we are actually on Gift 1
+  if (page !== gift1 && songAudio) {
     songAudio.pause();
   }
 
-
-  // -------------------------------------------------------
-  // Stop video whenever we leave video page
-  // -------------------------------------------------------
-
-  if (page !== videoPage) {
+  // Stop video unless we are actually on video page
+  if (page !== videoPage && mainVideo) {
     mainVideo.pause();
   }
 
-
-  // -------------------------------------------------------
-  // Stop Page 2 music whenever we leave Page 2
-  // -------------------------------------------------------
-
-  if (page !== page2) {
+  // Stop Page 2 music unless we are actually on Page 2
+  if (page !== page2 && page2Audio) {
     page2Audio.pause();
+    page2Audio.currentTime = 0;
   }
 
-
-  // -------------------------------------------------------
   // Hide all pages
-  // -------------------------------------------------------
-
   allPages.forEach(p => {
-    p.classList.remove('page--active');
+    if (p) {
+      p.classList.remove('page--active');
+    }
   });
 
-
-  // -------------------------------------------------------
-  // Show selected page
-  // -------------------------------------------------------
-
-  page.classList.add('page--active');
+  // Show requested page
+  if (page) {
+    page.classList.add('page--active');
+  }
 }
 
 
@@ -88,8 +91,7 @@ function showPage(page) {
 
 function buildReel(container) {
 
-  // We duplicate the photos twice.
-  // This creates the seamless infinite scrolling effect.
+  if (!container) return;
 
   for (let copy = 0; copy < 2; copy++) {
 
@@ -106,11 +108,7 @@ function buildReel(container) {
   }
 }
 
-
-// Build both reels
-
 buildReel(document.getElementById('reelTop'));
-
 buildReel(document.getElementById('reelBottom'));
 
 
@@ -123,77 +121,78 @@ function goAhead() {
   // Show Page 2
   showPage(page2);
 
+  // Start Page 2 music
+  if (page2Audio) {
 
-  // -------------------------------------------------------
-  // Start Page 2 birthday music
-  // -------------------------------------------------------
+    page2Audio.currentTime = 0;
 
-  page2Audio.currentTime = 0;
+    const playPromise = page2Audio.play();
 
-  const playPromise = page2Audio.play();
+    if (playPromise !== undefined) {
 
-  if (playPromise !== undefined) {
+      playPromise.catch(() => {
 
-    playPromise.catch(() => {
-
-      // If browser blocks autoplay,
-      // try again after the next user interaction.
-
-      const resumeOnTap = () => {
-
-        page2Audio.play().catch(() => {});
-
-        document.removeEventListener(
+        // Browser fallback
+        document.addEventListener(
           'click',
-          resumeOnTap
-        );
-      };
+          function resumeMusic() {
 
-      document.addEventListener(
-        'click',
-        resumeOnTap,
-        { once: true }
-      );
-    });
+            if (page2.classList.contains('page--active')) {
+              page2Audio.play().catch(() => {});
+            }
+
+          },
+          { once: true }
+        );
+
+      });
+    }
   }
 }
 
 
-document
-  .getElementById('goAheadBtn')
-  .addEventListener('click', goAhead);
+// Attach Go Ahead button
 
+const goAheadBtn = document.getElementById('goAheadBtn');
 
-// =========================================================
-// PAGE 2 → GIFTS
-// =========================================================
-
-function showGifts() {
-
-  // Stop Page 2 music
-  page2Audio.pause();
-
-  page2Audio.currentTime = 0;
-
-  // Show gifts page
-  showPage(page3);
+if (goAheadBtn) {
+  goAheadBtn.addEventListener('click', goAhead);
 }
 
 
-document
-  .getElementById('moreGiftsBtn')
-  .addEventListener('click', showGifts);
+// =========================================================
+// PAGE 2 → PAGE 3
+// =========================================================
+
+const moreGiftsBtn =
+  document.getElementById('moreGiftsBtn');
+
+if (moreGiftsBtn) {
+
+  moreGiftsBtn.addEventListener(
+    'click',
+    function () {
+
+      if (page2Audio) {
+        page2Audio.pause();
+        page2Audio.currentTime = 0;
+      }
+
+      showPage(page3);
+    }
+  );
+}
 
 
 // =========================================================
-// PAGE 3 → OPEN A GIFT
+// PAGE 3 → GIFTS
 // =========================================================
 
 function openGift(number) {
 
-  // -------------------------------------------------------
-  // GIFT 1 — SONG
-  // -------------------------------------------------------
+  // -----------------------------
+  // GIFT 1
+  // -----------------------------
 
   if (number === 1) {
 
@@ -203,30 +202,31 @@ function openGift(number) {
   }
 
 
-  // -------------------------------------------------------
-  // GIFT 2 — LETTER
-  // -------------------------------------------------------
+  // -----------------------------
+  // GIFT 2
+  // -----------------------------
 
   else if (number === 2) {
 
     showPage(gift2);
 
+    const letter =
+      document.getElementById('letter');
 
-    // Restart letter animation
+    if (letter) {
 
-    const letter = document.getElementById('letter');
+      letter.style.animation = 'none';
 
-    letter.style.animation = 'none';
+      void letter.offsetWidth;
 
-    void letter.offsetWidth;
-
-    letter.style.animation = '';
+      letter.style.animation = '';
+    }
   }
 
 
-  // -------------------------------------------------------
-  // GIFT 3 — VIDEO QUESTION
-  // -------------------------------------------------------
+  // -----------------------------
+  // GIFT 3
+  // -----------------------------
 
   else if (number === 3) {
 
@@ -237,20 +237,22 @@ function openGift(number) {
 }
 
 
-// Add click events to gift boxes
+// Gift buttons
 
 document
   .querySelectorAll('.gift-box')
   .forEach(box => {
 
-    box.addEventListener('click', () => {
+    box.addEventListener(
+      'click',
+      function () {
 
-      const giftNumber = Number(
-        box.dataset.gift
-      );
+        const number =
+          Number(box.dataset.gift);
 
-      openGift(giftNumber);
-    });
+        openGift(number);
+      }
+    );
   });
 
 
@@ -258,72 +260,77 @@ document
 // GIFT 1 — SONG
 // =========================================================
 
-// 2:30
 const SONG_START = 150;
-
-// 3:30
 const SONG_END = 210;
 
 
-// ---------------------------------------------------------
-// Prepare song
-// ---------------------------------------------------------
+// Prepare song WITHOUT playing
 
 function setupSongPlayback() {
 
-  // IMPORTANT:
-  // Do NOT play the song automatically.
+  if (!songAudio) return;
 
   songAudio.pause();
-
-  // Start the player at 2:30
-  // so when she presses Play,
-  // it starts from the part we want.
 
   songAudio.currentTime = SONG_START;
 }
 
 
-// ---------------------------------------------------------
-// When she manually presses Play
-// ---------------------------------------------------------
+// Make sure song never starts outside Gift 1
 
-songAudio.addEventListener('play', () => {
+if (songAudio) {
 
-  // If somehow the player is outside
-  // our desired section, return to 2:30.
+  songAudio.addEventListener(
+    'play',
+    function () {
 
-  if (
-    songAudio.currentTime < SONG_START ||
-    songAudio.currentTime >= SONG_END
-  ) {
+      // If Gift 1 isn't visible,
+      // immediately stop the song.
 
-    songAudio.currentTime = SONG_START;
-  }
-});
+      if (!gift1.classList.contains('page--active')) {
 
+        songAudio.pause();
 
-// ---------------------------------------------------------
-// Stop song at 3:30
-// ---------------------------------------------------------
-
-songAudio.addEventListener('timeupdate', () => {
-
-  if (songAudio.currentTime >= SONG_END) {
-
-    songAudio.pause();
-
-    songAudio.currentTime = SONG_START;
-  }
-});
+        return;
+      }
 
 
-// ---------------------------------------------------------
-// Stop / reset song
-// ---------------------------------------------------------
+      // Keep playback inside 2:30–3:30
+
+      if (
+        songAudio.currentTime < SONG_START ||
+        songAudio.currentTime >= SONG_END
+      ) {
+
+        songAudio.currentTime = SONG_START;
+      }
+    }
+  );
+
+
+  // Stop at 3:30
+
+  songAudio.addEventListener(
+    'timeupdate',
+    function () {
+
+      if (songAudio.currentTime >= SONG_END) {
+
+        songAudio.pause();
+
+        songAudio.currentTime = SONG_START;
+      }
+    }
+  );
+}
+
+
+// Stop song
 
 function stopSong() {
 
+  if (!songAudio) return;
+
   songAudio.pause();
 
   songAudio.currentTime = SONG_START;
@@ -331,34 +338,29 @@ function stopSong() {
 
 
 // =========================================================
-// GIFT 3 — ESCAPING "NO" BUTTON
+// GIFT 3 — ESCAPING NO BUTTON
 // =========================================================
 
-const noBtn = document.getElementById('noBtn');
+const noBtn =
+  document.getElementById('noBtn');
 
 const questionBtns =
   document.querySelector('.question-btns');
 
 
-// ---------------------------------------------------------
-// Reset NO button
-// ---------------------------------------------------------
-
 function resetNoButton() {
 
+  if (!noBtn) return;
+
   noBtn.style.position = 'static';
-
   noBtn.style.left = '';
-
   noBtn.style.top = '';
 }
 
 
-// ---------------------------------------------------------
-// Move NO button
-// ---------------------------------------------------------
-
 function moveNoButton() {
+
+  if (!noBtn || !questionBtns) return;
 
   const containerRect =
     questionBtns.getBoundingClientRect();
@@ -366,30 +368,17 @@ function moveNoButton() {
   const btnRect =
     noBtn.getBoundingClientRect();
 
-
-  const maxX = Math.max(
-    containerRect.width - btnRect.width,
-    40
-  );
-
-
-  const maxY = Math.max(
-    containerRect.height - btnRect.height,
-    40
-  );
-
-
-  // Random horizontal position
+  const maxX =
+    Math.max(
+      containerRect.width - btnRect.width,
+      40
+    );
 
   const newX =
     Math.random() * maxX;
 
-
-  // Small vertical movement
-
   const newY =
     (Math.random() - 0.5) * 120;
-
 
   noBtn.style.position = 'absolute';
 
@@ -401,59 +390,63 @@ function moveNoButton() {
 }
 
 
-// ---------------------------------------------------------
-// Desktop
-// ---------------------------------------------------------
+if (noBtn) {
 
-noBtn.addEventListener(
-  'mouseenter',
-  moveNoButton
-);
+  noBtn.addEventListener(
+    'mouseenter',
+    moveNoButton
+  );
 
+  noBtn.addEventListener(
+    'click',
+    function (e) {
 
-// ---------------------------------------------------------
-// Click
-// ---------------------------------------------------------
+      e.preventDefault();
 
-noBtn.addEventListener(
-  'click',
-  (e) => {
+      moveNoButton();
+    }
+  );
 
-    e.preventDefault();
+  noBtn.addEventListener(
+    'touchstart',
+    function (e) {
 
-    moveNoButton();
-  }
-);
+      e.preventDefault();
 
-
-// ---------------------------------------------------------
-// Mobile
-// ---------------------------------------------------------
-
-noBtn.addEventListener(
-  'touchstart',
-  (e) => {
-
-    e.preventDefault();
-
-    moveNoButton();
-  }
-);
+      moveNoButton();
+    }
+  );
+}
 
 
 // =========================================================
 // YES → VIDEO PAGE
 // =========================================================
 
-document
-  .getElementById('yesBtn')
-  .addEventListener(
+const yesBtn =
+  document.getElementById('yesBtn');
+
+
+if (yesBtn) {
+
+  yesBtn.addEventListener(
     'click',
     showVideo
   );
+}
 
 
 function showVideo() {
+
+  // Stop everything else
+
+  if (page2Audio) {
+    page2Audio.pause();
+  }
+
+  if (songAudio) {
+    songAudio.pause();
+  }
 
   // Show video page
 
@@ -461,11 +454,14 @@ function showVideo() {
 
 
   // IMPORTANT:
-  // Video must NOT autoplay.
+  // Video does NOT autoplay.
 
-  mainVideo.pause();
+  if (mainVideo) {
 
-  mainVideo.currentTime = 0;
+    mainVideo.pause();
+
+    mainVideo.currentTime = 0;
+  }
 }
 
 
@@ -475,40 +471,38 @@ function showVideo() {
 
 function backToGifts() {
 
-  // -------------------------------------------------------
+  // Stop Page 2 music
+
+  if (page2Audio) {
+
+    page2Audio.pause();
+
+    page2Audio.currentTime = 0;
+  }
+
+
   // Stop song
-  // -------------------------------------------------------
 
   stopSong();
 
 
-  // -------------------------------------------------------
   // Stop video
-  // -------------------------------------------------------
 
-  mainVideo.pause();
+  if (mainVideo) {
 
-  mainVideo.currentTime = 0;
+    mainVideo.pause();
 
-
-  // -------------------------------------------------------
-  // Stop Page 2 music
-  // -------------------------------------------------------
-
-  page2Audio.pause();
-
-  page2Audio.currentTime = 0;
+    mainVideo.currentTime = 0;
+  }
 
 
-  // -------------------------------------------------------
   // Return to gifts
-  // -------------------------------------------------------
 
   showPage(page3);
 }
 
 
-// Add Back button functionality
+// Back buttons
 
 document
   .querySelectorAll('[data-back]')
