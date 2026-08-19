@@ -119,7 +119,10 @@ const SONG_END = 210;   // seconds (3:30)
 function setupSongPlayback() {
   songAudio.currentTime = SONG_START;
   const playPromise = songAudio.play();
-  if (playPromise !== undefined) {
+  if (playPromise function setupSongPlayback() {
+  songAudio.pause();
+  songAudio.currentTime = SONG_START;
+}!== undefined) {
     playPromise.catch(() => {});
   }
 }
