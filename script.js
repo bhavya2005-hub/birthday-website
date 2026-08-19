@@ -190,6 +190,10 @@ document.getElementById('yesBtn').addEventListener('click', showVideo);
 
 function showVideo() {
   showPage(videoPage);
+
+  // Start the video ONLY after she clicks YES
+  mainVideo.currentTime = 0;
+
   const playPromise = mainVideo.play();
   if (playPromise !== undefined) {
     playPromise.catch(() => {});
