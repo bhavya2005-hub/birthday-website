@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Happy Birthday 💗</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ============================= -->
+<!-- PAGE 1 — INTRODUCTION -->
+<!-- ============================= -->
+<section id="page1" class="page page--active">
+  <div class="floaties" aria-hidden="true">
+    <span class="floaty">♡</span>
+    <span class="floaty">✦</span>
+    <span class="floaty">♡</span>
+    <span class="floaty">✦</span>
+    <span class="floaty">♡</span>
+  </div>
+
+  <div class="page1-content">
+    <img src="images/cat.gif" alt="" class="cat-hero" />
+    <h1 class="page1-heading">Here's a little<br>surprise for you</h1>
+    <button id="goAheadBtn" class="btn btn--main">Go ahead <span class="heart">💗</span></button>
+  </div>
+</section>
+
+<!-- ============================= -->
+<!-- PAGE 2 — HAPPY BIRTHDAY -->
+<!-- ============================= -->
+<section id="page2" class="page">
+
+  <!-- PAGE 2 → GIFTS -->
+  <button id="moreGiftsBtn" class="more-gifts-btn" aria-label="More gifts">
+    <span class="mg-emoji">🎁</span>
+    <span class="mg-text">MORE&nbsp;GIFTS</span>
+  </button>
+
+  <div class="reel-track reel-track--top" aria-hidden="true">
+    <div class="reel reel--top" id="reelTop"></div>
+  </div>
+
+  <div class="page2-center">
+    <p class="p2-eyebrow">Today is all about you</p>
+    <h1 class="p2-happy">
+      <span class="p2-happy-line">Happy</span>
+      <span class="p2-happy-line p2-happy-line--big">Birthday</span>
+    </h1>
+    <p class="p2-name">✦ Sudha ✦</p>
+    <p class="p2-symbol">♡</p>
+  </div>
+
+  <div class="reel-track reel-track--bottom" aria-hidden="true">
+    <div class="reel reel--bottom" id="reelBottom"></div>
+  </div>
+
+  <audio id="page2Audio" src="audio/Happy Birthday Meow Meow Cat.mp3" preload="auto" loop></audio>
+</section>
+
+<!-- ============================= -->
+<!-- PAGE 3 — MYSTERY GIFTS -->
+<!-- ============================= -->
+<section id="page3" class="page">
+  <div class="p3-content">
+    <img src="images/cat6.gif" alt="" class="cat-small floaty-cat" />
+    <h2 class="p3-heading">Here are some more</h2>
+    <p class="p3-sub">Pick one&hellip; but no peeking 👀</p>
+
+    <div class="gift-row">
+      <button class="gift-box" data-gift="1" aria-label="Mystery gift one">
+        <span class="gift-emoji">🎁</span>
+      </button>
+      <button class="gift-box" data-gift="2" aria-label="Mystery gift two">
+        <span class="gift-emoji">🎁</span>
+      </button>
+      <button class="gift-box" data-gift="3" aria-label="Mystery gift three">
+        <span class="gift-emoji">🎁</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= -->
+<!-- GIFT 1 — SONG -->
+<!-- ============================= -->
+<section id="gift1" class="page gift-page">
+  <div class="song-wrap">
+
+    <div class="song-gif-side">
+      <img src="images/cat5.gif" alt="Dancing cat" class="song-gif" />
+    </div>
+
+    <div class="song-lyrics">
+      <p class="song-lyrics__line">Anyway the thing is, what I really mean<br>Yours are the sweetest eyes I've ever seen</p>
+      <p class="song-lyrics__line">And you can tell everybody<br>This is the song<br>It may be quite simple, but now that it's done</p>
+      <p class="song-lyrics__line">I hope you don't mind<br>I hope you don't mind<br>That I put down in the words<br>How wonderful life is while you're in the world</p>
+    </div>
+
+    <div class="song-vinyl-side">
+      <div class="vinyl" id="vinyl">
+        <div class="vinyl__grooves"></div>
+        <div class="vinyl__label">
+          <span>YOUR<br>SONG</span>
+        </div>
+        <div class="vinyl__hole"></div>
+      </div>
+      <p class="song-title">Your Song</p>
+      <p class="song-artist">Elton John</p>
+      <audio id="songAudio" src="audio/song1.mp3" preload="auto" autoplay controls></audio>
+    </div>
+
+  </div>
+  <button class="back-btn" data-back>← Back to gifts</button>
+</section>
+
+<!-- ============================= -->
+<!-- GIFT 2 — LETTER -->
+<!-- ============================= -->
+<section id="gift2" class="page gift-page gift-page--letter">
+  <div class="letter" id="letter">
+    <p class="letter__greeting">Hey Sudha,</p>
+
+    <p>Happy Birthday. Happy Birthday to my kuchupuchu.<br>YAYYYYYYYYY BUDDAYYY</p>
+
+    <p>Six months ago, I had no idea that the girl I was meeting would eventually become someone I'd be writing a birthday letter to. It's a day to celebrate, celebrate that you were born. Well that's one hell of a reason to celebrate. I celebrate your existence every now and then in fact.</p>
+
+    <p>You are an amazing person Sudha, I just love to see you smile and I hope this day is the beginning of yet another joyful year of seeing you smile. For this year, I wish that you get everything you've been working towards, people that appreciate you, opportunities that excite you and most importantly, I wish that you laugh, smile and stay healthy and also selfishly, that I get to see most of it.</p>
+
+    <p>Six months in, there is still a lot of things I want to learn about you. These six months passed in a flash but I think we lived every moment of it and I hope we keep doing that.</p>
+
+    <p>Celebrate yourself, for the person you are and what lies ahead.</p>
+
+    <p>I still like you, a lot more than I did six months ago. And somehow, I don't see that changing anytime soon.</p>
+
+    <img src="images/cat4.gif" alt="" class="letter__signature" />
+  </div>
+  <button class="back-btn" data-back>← Back to gifts</button>
+</section>
+
+<!-- ============================= -->
+<!-- GIFT 3 — VIDEO QUESTION -->
+<!-- ============================= -->
+<section id="gift3" class="page gift-page">
+  <div class="question-content">
+    <img src="images/cat3.gif" alt="" class="cat-small floaty-cat" />
+    <p class="question-heading">I made a video<br>for the most beautiful girl</p>
+    <p class="question-ask">Would you like to see it?</p>
+    <div class="question-btns">
+      <button id="yesBtn" class="btn btn--yes">YES ❤️</button>
+      <button id="noBtn" class="btn btn--no">NO</button>
+    </div>
+  </div>
+  <button class="back-btn" data-back>← Back to gifts</button>
+</section>
+
+<!-- ============================= -->
+<!-- VIDEO PAGE -->
+<!-- ============================= -->
+<section id="videoPage" class="page gift-page">
+  <div class="video-page-layout">
+    <img src="images/cat7.gif" alt="Dancing cat" class="video-page-gif" />
+    <div class="video-content">
+      <p class="video-heading">This one's for you ❤️</p>
+      <video id="mainVideo" src="videos/video1.mp4" autoplay controls playsinline></video>
+    </div>
+  </div>
+  <button class="back-btn" data-back>← Back to gifts</button>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
